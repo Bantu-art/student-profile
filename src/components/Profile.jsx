@@ -35,7 +35,7 @@ const Profile = () => {
         <div className="profile-content">
           {/* User Information Card */}
           <div className="info-card">
-            <h2>User Information</h2>
+            <h2>👤 User Information</h2>
             <div className="info-grid">
               <div className="info-item">
                 <label>User ID:</label>
@@ -43,7 +43,7 @@ const Profile = () => {
               </div>
               <div className="info-item">
                 <label>Username:</label>
-                <span>{user?.username || user?.login || 'N/A'}</span>
+                <span>{user?.login || 'N/A'}</span>
               </div>
               <div className="info-item">
                 <label>Email:</label>
@@ -60,69 +60,46 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* JWT Token Information */}
-          <div className="info-card">
-            <h2>Authentication Details</h2>
-            <div className="token-info">
-              <p>
-                <strong>Status:</strong> 
-                <span className="status-badge authenticated">Authenticated</span>
-              </p>
-              <p>
-                <strong>Token Type:</strong> JWT (JSON Web Token)
-              </p>
-              <p>
-                <strong>API Endpoint:</strong> 
-                <code>https://learn.zone01kisumu.ke/api/graphql-engine/v1/graphql</code>
-              </p>
-            </div>
-          </div>
-
           {/* Coming Soon Section */}
           <div className="info-card coming-soon">
-            <h2>Coming Soon</h2>
+            <h2>📊 Profile Data Coming Soon</h2>
             <div className="feature-list">
               <div className="feature-item">
-                <span className="feature-icon">📊</span>
+                <span className="feature-icon">🏆</span>
                 <div>
                   <h3>XP Statistics</h3>
-                  <p>Interactive graphs showing your XP progression over time</p>
+                  <p>Your total XP and progression over time</p>
+                </div>
+              </div>
+              <div className="feature-item">
+                <span className="feature-icon">📈</span>
+                <div>
+                  <h3>Project Performance</h3>
+                  <p>Pass/fail ratios and project completion statistics</p>
                 </div>
               </div>
               <div className="feature-item">
                 <span className="feature-icon">🎯</span>
                 <div>
-                  <h3>Project Analytics</h3>
-                  <p>Pass/fail ratios and project completion statistics</p>
+                  <h3>Skills Progress</h3>
+                  <p>Your skills development and exercise completion</p>
                 </div>
               </div>
               <div className="feature-item">
                 <span className="feature-icon">🔍</span>
                 <div>
-                  <h3>Audit Insights</h3>
-                  <p>Detailed audit ratios and peer review analytics</p>
+                  <h3>Audit Performance</h3>
+                  <p>Audit ratios and peer review statistics</p>
                 </div>
               </div>
-              <div className="feature-item">
-                <span className="feature-icon">🏊‍♂️</span>
-                <div>
-                  <h3>Piscine Progress</h3>
-                  <p>JavaScript and Go piscine statistics and achievements</p>
-                </div>
-              </div>
+            </div>
+            <div className="coming-soon-note">
+              <p>
+                <strong>Note:</strong> GraphQL data fetching will be implemented in the next phase.
+                Currently showing basic authentication information.
+              </p>
             </div>
           </div>
-
-          {/* Debug Information (for development) */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="info-card debug-info">
-              <h2>Debug Information</h2>
-              <details>
-                <summary>JWT Token Payload</summary>
-                <pre>{JSON.stringify(user, null, 2)}</pre>
-              </details>
-            </div>
-          )}
         </div>
       </main>
     </div>
