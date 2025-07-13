@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zone01 Kisumu - Profile Dashboard</title>
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1>Zone01 Kisumu</h1>
+                <span class="header-subtitle">Profile Dashboard</span>
+            </div>
+            <div class="header-right">
+                <span id="welcomeUser" class="welcome-text">Welcome, User</span>
+                <button id="logoutBtn" class="logout-btn">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-container">
+            <div class="loading-spinner"></div>
+            <h2>Loading your profile...</h2>
+            <p>Fetching your latest data from Zone01 Kisumu</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-container" style="display: none;">
+            <div class="error-icon">⚠️</div>
+            <h2>Unable to load profile data</h2>
+            <p id="errorMessage">Something went wrong while fetching your data.</p>
+            <button id="retryBtn" class="retry-btn">Try Again</button>
+        </div>
+
+        <!-- Profile Content -->
+        <div id="profileContent" class="profile-container" style="display: none;">
+            
+            <!-- User Info Section -->
+            <section class="profile-section">
+                <div class="section-header">
+                    <h2>👤 Profile Information</h2>
+                </div>
+                <div class="user-info-card">
+                    <div class="user-avatar">
+                        <span id="userInitials">BB</span>
+                    </div>
+                    <div class="user-details">
+                        <h3 id="userName">Brian Bantu</h3>
+                        <p id="userEmail">brianbaraza40@gmail.com</p>
+                        <p id="userJoinDate">Member since January 2024</p>
+                    </div>
+                    <div class="user-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="userXP">0</span>
+                            <span class="stat-label">Total XP</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="userProjects">0</span>
+                            <span class="stat-label">Projects</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Project Progress Section -->
+            <section class="profile-section">
+                <div class="section-header">
+                    <h2>🚀 Project Progress</h2>
+                </div>
+                <div class="projects-grid">
+                    <div class="project-card current">
+                        <div class="project-status">Current</div>
+                        <h3 id="currentProject">GraphQL</h3>
+                        <p id="currentProjectDate">Started June 28, 2025</p>
+                        <div class="project-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%;"></div>
+                            </div>
+                            <span>In Progress</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card completed">
+                        <div class="project-status success">Completed</div>
+                        <h3 id="recentProject">Real-time Forum</h3>
+                        <p id="recentProjectDate">Completed May 9, 2025</p>
+                        <div class="project-grade">
+                            <span class="grade-value" id="recentGrade">110.4%</span>
+                            <span class="grade-label">Excellent!</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Statistics Charts Section -->
+            <section class="profile-section">
+                <div class="section-header">
+                    <h2>📊 Statistics</h2>
+                    <button id="refreshStats" class="refresh-btn">🔄 Refresh</button>
+                </div>
+                <div class="charts-container">
+                    <!-- Chart 1: Progress Timeline -->
+                    <div class="chart-card">
+                        <h3>📈 Progress Timeline</h3>
+                        <div id="progressChart" class="chart-area">
+                            <!-- SVG chart will be inserted here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Chart 2: Grade Distribution -->
+                    <div class="chart-card">
+                        <h3>🎯 Grade Distribution</h3>
+                        <div id="gradeChart" class="chart-area">
+                            <!-- SVG chart will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skills & Technologies Section -->
+            <section class="profile-section">
+                <div class="section-header">
+                    <h2>🎯 Skills & Technologies</h2>
+                </div>
+                <div class="skills-container">
+                    <div class="skill-item">
+                        <span class="skill-name">Go Programming</span>
+                        <div class="skill-progress">
+                            <div class="skill-bar" style="width: 85%;"></div>
+                        </div>
+                        <span class="skill-level">Advanced</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">Rust</span>
+                        <div class="skill-progress">
+                            <div class="skill-bar" style="width: 60%;"></div>
+                        </div>
+                        <span class="skill-level">Intermediate</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">GraphQL</span>
+                        <div class="skill-progress">
+                            <div class="skill-bar" style="width: 40%;"></div>
+                        </div>
+                        <span class="skill-level">Learning</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">Web Development</span>
+                        <div class="skill-progress">
+                            <div class="skill-bar" style="width: 75%;"></div>
+                        </div>
+                        <span class="skill-level">Proficient</span>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>
