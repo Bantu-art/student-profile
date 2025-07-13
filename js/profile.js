@@ -8,32 +8,15 @@ class ProfilePage {
     }
 
     init() {
-        // Ensure DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.initializeApp());
-        } else {
-            this.initializeApp();
-        }
-    }
-
-    initializeApp() {
-        // Set page title immediately
-        document.title = 'Zone01 Kisumu - Profile Dashboard';
-
-        // Check authentication
+        // Check authentication first
         if (!Auth.requireAuth()) {
             return;
         }
 
-        // Initialize UI with proper loading state
-        this.showLoading();
+        // Initialize immediately
         this.setupEventListeners();
         this.updateWelcomeMessage();
-
-        // Small delay to prevent glitching
-        setTimeout(() => {
-            this.loadProfileData();
-        }, 150);
+        this.loadProfileData();
     }
 
     setupEventListeners() {
@@ -62,29 +45,15 @@ class ProfilePage {
     }
 
     async loadProfileData() {
-        if (this.isLoading) {
-            return; // Prevent multiple simultaneous loads
-        }
-
-        this.isLoading = true;
         this.showLoading();
 
         try {
-            console.log('Loading profile data...');
             this.profileData = await this.api.getProfileData();
-
-            // Ensure we have data before displaying
-            if (this.profileData) {
-                this.displayProfileData();
-                this.showProfile();
-            } else {
-                throw new Error('No profile data received');
-            }
+            this.displayProfileData();
+            this.showProfile();
         } catch (error) {
             console.error('Failed to load profile data:', error);
             this.showError(error.message);
-        } finally {
-            this.isLoading = false;
         }
     }
 
@@ -646,20 +615,9 @@ class ProfilePage {
         const profileContent = document.getElementById('profileContent');
 
         if (loadingState && errorState && profileContent) {
-            // Smooth transition to loading state
-            profileContent.style.opacity = '0';
+            loadingState.style.display = 'block';
             errorState.style.display = 'none';
-
-            setTimeout(() => {
-                loadingState.style.display = 'block';
-                profileContent.style.display = 'none';
-
-                // Fade in loading state
-                loadingState.style.opacity = '0';
-                setTimeout(() => {
-                    loadingState.style.opacity = '1';
-                }, 10);
-            }, 100);
+            profileContent.style.display = 'none';
         }
     }
 
@@ -674,20 +632,9 @@ class ProfilePage {
         }
 
         if (loadingState && errorState && profileContent) {
-            // Smooth transition to error state
-            loadingState.style.opacity = '0';
-
-            setTimeout(() => {
-                loadingState.style.display = 'none';
-                profileContent.style.display = 'none';
-                errorState.style.display = 'block';
-
-                // Fade in error state
-                errorState.style.opacity = '0';
-                setTimeout(() => {
-                    errorState.style.opacity = '1';
-                }, 10);
-            }, 200);
+            loadingState.style.display = 'none';
+            errorState.style.display = 'block';
+            profileContent.style.display = 'none';
         }
     }
 
@@ -697,20 +644,9 @@ class ProfilePage {
         const profileContent = document.getElementById('profileContent');
 
         if (loadingState && errorState && profileContent) {
-            // Smooth transition to profile content
-            loadingState.style.opacity = '0';
-
-            setTimeout(() => {
-                loadingState.style.display = 'none';
-                errorState.style.display = 'none';
-                profileContent.style.display = 'block';
-
-                // Fade in profile content
-                profileContent.style.opacity = '0';
-                setTimeout(() => {
-                    profileContent.style.opacity = '1';
-                }, 10);
-            }, 200);
+            loadingState.style.display = 'none';
+            errorState.style.display = 'none';
+            profileContent.style.display = 'block';
         }
     }
 }
