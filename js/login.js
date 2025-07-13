@@ -1,5 +1,5 @@
 // Zone01 Kisumu Login Logic
-export class LoginManager {
+class LoginManager {
   constructor() {
     this.apiUrl = 'https://learn.zone01kisumu.ke/api/auth/signin';
     this.init();

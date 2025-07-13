@@ -1,5 +1,5 @@
 // Zone01 Kisumu GraphQL API Service
-export class GraphQLAPI {
+class GraphQLAPI {
     constructor() {
         this.endpoint = 'https://learn.zone01kisumu.ke/api/graphql-engine/v1/graphql';
         this.token = localStorage.getItem('jwt_token');
