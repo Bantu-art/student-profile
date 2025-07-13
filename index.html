@@ -14,7 +14,7 @@
                 <p>GraphQL Profile Dashboard</p>
             </div>
 
-            <form id="loginForm" class="login-form">
+            <form id="loginForm" class="login-form" onsubmit="return false;">
                 <div class="form-group">
                     <label for="username">Username or Email</label>
                     <input
@@ -23,6 +23,7 @@
                         name="username"
                         placeholder="Enter your username or email"
                         required
+                        autocomplete="username"
                     >
                 </div>
 
@@ -34,10 +35,11 @@
                         name="password"
                         placeholder="Enter your password"
                         required
+                        autocomplete="current-password"
                     >
                 </div>
 
-                <button type="submit" id="loginBtn" class="login-btn">
+                <button type="button" id="loginBtn" class="login-btn">
                     <span class="btn-text">Sign In</span>
                     <span class="btn-loader" style="display: none;">🔄 Signing in...</span>
                 </button>

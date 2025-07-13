@@ -61,7 +61,13 @@
     </div>
 
     <div class="debug-section">
-        <h2>4. Navigation Test</h2>
+        <h2>4. JavaScript Test</h2>
+        <button onclick="testJavaScript()">Test JavaScript Loading</button>
+        <div id="jsTestResult"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>5. Navigation Test</h2>
         <button onclick="goToProfile()">Go to Profile</button>
         <button onclick="goToLogin()">Go to Login</button>
     </div>
@@ -171,6 +177,41 @@
 
         function goToLogin() {
             window.location.href = 'index.html';
+        }
+
+        function testJavaScript() {
+            const resultDiv = document.getElementById('jsTestResult');
+
+            // Test if Auth class is available
+            if (typeof Auth !== 'undefined') {
+                resultDiv.innerHTML = '<p style="color: green;">✅ Auth class is loaded</p>';
+
+                // Test if we can create an Auth instance
+                try {
+                    const auth = new Auth();
+                    resultDiv.innerHTML += '<p style="color: green;">✅ Auth instance created successfully</p>';
+                } catch (error) {
+                    resultDiv.innerHTML += `<p style="color: red;">❌ Error creating Auth instance: ${error.message}</p>`;
+                }
+            } else {
+                resultDiv.innerHTML = '<p style="color: red;">❌ Auth class not loaded - check if auth.js is loading properly</p>';
+            }
+
+            // Test DOM elements
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+
+            if (loginForm) {
+                resultDiv.innerHTML += '<p style="color: green;">✅ Login form found</p>';
+            } else {
+                resultDiv.innerHTML += '<p style="color: red;">❌ Login form not found</p>';
+            }
+
+            if (loginBtn) {
+                resultDiv.innerHTML += '<p style="color: green;">✅ Login button found</p>';
+            } else {
+                resultDiv.innerHTML += '<p style="color: red;">❌ Login button not found</p>';
+            }
         }
 
         // Auto-check storage on load

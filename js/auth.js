@@ -12,24 +12,44 @@ class Auth {
             return;
         }
 
-        // Bind form submission
+        // Bind login button click
+        const loginBtn = document.getElementById('loginBtn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', (e) => this.handleLogin(e));
+        }
+
+        // Bind form submission as backup
         const form = document.getElementById('loginForm');
-        form.addEventListener('submit', (e) => this.handleLogin(e));
+        if (form) {
+            form.addEventListener('submit', (e) => this.handleLogin(e));
+        }
 
         // Add enter key support
         document.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                form.dispatchEvent(new Event('submit'));
+                const usernameField = document.getElementById('username');
+                const passwordField = document.getElementById('password');
+                if (document.activeElement === usernameField || document.activeElement === passwordField) {
+                    this.handleLogin(e);
+                }
             }
         });
+
+        console.log('Auth initialized'); // Debug log
     }
 
     async handleLogin(event) {
-        event.preventDefault();
-        
+        if (event) {
+            event.preventDefault();
+        }
+
+        console.log('Login attempt started'); // Debug log
+
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
-        
+
+        console.log('Username:', username); // Debug log (don't log password)
+
         if (!username || !password) {
             this.showError('Please enter both username/email and password');
             return;
@@ -39,16 +59,25 @@ class Auth {
         this.hideError();
 
         try {
+            console.log('Attempting authentication...'); // Debug log
             const token = await this.authenticate(username, password);
-            
+
             if (token) {
+                console.log('Authentication successful, token received'); // Debug log
+
                 // Save token and user info
                 localStorage.setItem('jwt_token', token);
                 localStorage.setItem('username', username);
                 localStorage.setItem('login_time', new Date().toISOString());
-                
-                // Redirect to profile
-                window.location.href = 'profile.html';
+
+                console.log('Token saved, redirecting to profile...'); // Debug log
+
+                // Small delay to ensure storage is complete
+                setTimeout(() => {
+                    window.location.href = 'profile.html';
+                }, 100);
+            } else {
+                this.showError('Authentication failed - no token received');
             }
         } catch (error) {
             console.error('Login error:', error);
@@ -59,24 +88,45 @@ class Auth {
     }
 
     async authenticate(username, password) {
-        // Create base64 encoded credentials
-        const credentials = btoa(`${username}:${password}`);
-        
-        const response = await fetch(this.apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Basic ${credentials}`
-            }
-        });
+        try {
+            // Create base64 encoded credentials
+            const credentials = btoa(`${username}:${password}`);
 
-        if (response.ok) {
-            const token = await response.text();
-            // Remove quotes if present
-            return token.replace(/"/g, '');
-        } else {
-            const errorText = await response.text();
-            throw new Error(`Authentication failed: ${response.status}`);
+            console.log('Making authentication request...'); // Debug log
+
+            const response = await fetch(this.apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${credentials}`
+                }
+            });
+
+            console.log('Response status:', response.status); // Debug log
+
+            if (response.ok) {
+                const token = await response.text();
+                console.log('Token received, length:', token.length); // Debug log
+
+                // Remove quotes if present
+                const cleanToken = token.replace(/"/g, '');
+
+                // Validate token format (basic JWT check)
+                if (cleanToken.split('.').length === 3) {
+                    return cleanToken;
+                } else {
+                    throw new Error('Invalid token format received');
+                }
+            } else {
+                const errorText = await response.text();
+                console.error('Authentication failed:', response.status, errorText); // Debug log
+                throw new Error(`Authentication failed: ${response.status} - ${errorText}`);
+            }
+        } catch (error) {
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                throw new Error('Network error - please check your internet connection');
+            }
+            throw error;
         }
     }
 
