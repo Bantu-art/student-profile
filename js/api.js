@@ -1,8 +1,8 @@
 // Zone01 Kisumu GraphQL API Service
-class GraphQLAPI {
+export class GraphQLAPI {
     constructor() {
         this.endpoint = 'https://learn.zone01kisumu.ke/api/graphql-engine/v1/graphql';
-        this.token = Auth.getToken();
+        this.token = localStorage.getItem('jwt_token');
     }
 
     async makeRequest(query, variables = {}) {
@@ -276,5 +276,4 @@ class GraphQLAPI {
     }
 }
 
-// Export for use in other scripts
-window.GraphQLAPI = GraphQLAPI;
+// GraphQLAPI is now exported as ES6 module

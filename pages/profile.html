@@ -1,25 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zone01 Kisumu - Profile Dashboard</title>
-    <link rel="stylesheet" href="css/profile.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - Zone01 Kisumu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-    <!-- Navigation Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="header-left">
-                <h1>Zone01 Kisumu</h1>
-                <span class="header-subtitle">Profile Dashboard</span>
+  <div id="app">
+    <div id="auth-controls">
+      <a href="../index.html" class="btn btn-secondary">← Back to Home</a>
+      <button id="logout-button" class="btn btn-danger">Logout</button>
+    </div>
+
+    <div class="profile-container">
+      <div id="error-message" class="error-message"></div>
+
+      <div class="profile-grid">
+        <!-- User Info Card -->
+        <div class="card user-info-card">
+          <h2>User Information</h2>
+          <div class="user-details">
+            <div class="user-avatar">
+              <span id="user-initials">--</span>
             </div>
-            <div class="header-right">
-                <span id="welcomeUser" class="welcome-text">Welcome, User</span>
-                <button id="logoutBtn" class="logout-btn">Sign Out</button>
+            <div class="user-text">
+              <h3 id="user-name">Loading...</h3>
+              <p id="user-email">Loading...</p>
+              <p id="user-login">Loading...</p>
             </div>
+          </div>
         </div>
-    </header>
+
+        <!-- XP Card -->
+        <div class="card xp-card">
+          <h2>Experience Points</h2>
+          <div class="xp-display">
+            <div class="xp-amount" id="total-xp">0 XP</div>
+            <div class="xp-level" id="xp-level">Level 0</div>
+          </div>
+        </div>
+
+        <!-- Audit Ratio Card -->
+        <div class="card audit-card">
+          <h2>Audit Ratio</h2>
+          <div class="audit-display">
+            <div class="audit-ratio" id="audit-ratio">0.0</div>
+            <div class="audit-details">
+              <span id="audit-up">0 ↑</span>
+              <span id="audit-down">0 ↓</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills Card -->
+        <div class="card skills-card">
+          <h2>Skills</h2>
+          <div id="skills-container" class="skills-container">
+            <p>Loading skills...</p>
+          </div>
+        </div>
+
+        <!-- XP Progress Chart -->
+        <div class="card chart-card">
+          <h2>XP Progress Over Time</h2>
+          <div id="xp-chart" class="chart-container"></div>
+        </div>
+
+        <!-- Grade Distribution Chart -->
+        <div class="card chart-card">
+          <h2>Grade Distribution</h2>
+          <div id="grade-chart" class="chart-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="../js/profile.js"></script>
+</body>
+</html>
 
     <!-- Main Content -->
     <main class="main-content">

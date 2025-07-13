@@ -1,96 +1,75 @@
 // Zone01 Kisumu Profile Page Logic
-class ProfilePage {
-    constructor() {
-        this.api = new GraphQLAPI();
-        this.profileData = null;
+import { GraphQLAPI } from './api.js';
+import { LoginManager } from './login.js';
 
-        // Initialize immediately since we're called after window load
-        this.init();
+class ProfileManager {
+  constructor() {
+    this.api = new GraphQLAPI();
+    this.profileData = null;
+    this.init();
+  }
+
+  init() {
+    // Check authentication first
+    if (!LoginManager.requireAuth()) {
+      return;
     }
 
-    init() {
-        // Check authentication first
-        if (!Auth.requireAuth()) {
-            return;
-        }
+    this.setupEventListeners();
+    this.loadProfileData();
+  }
 
-        // Setup event listeners
-        this.setupEventListeners();
-        this.updateWelcomeMessage();
-
-        // Load data after a small delay to ensure everything is ready
-        setTimeout(() => {
-            this.loadProfileData();
-        }, 500);
+  setupEventListeners() {
+    const logoutButton = document.getElementById('logout-button');
+    if (logoutButton) {
+      logoutButton.addEventListener('click', () => {
+        this.logout();
+      });
     }
+  }
 
-    setupEventListeners() {
-        // Logout button
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            Auth.logout();
-        });
+  logout() {
+    localStorage.removeItem('jwt_token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('login_time');
+    window.location.href = '../index.html';
+  }
 
-        // Retry button
-        document.getElementById('retryBtn').addEventListener('click', () => {
-            this.loadProfileData();
-        });
-
-        // Refresh stats button
-        document.getElementById('refreshStats').addEventListener('click', () => {
-            this.loadProfileData();
-        });
+  async loadProfileData() {
+    try {
+      this.profileData = await this.api.getProfileData();
+      this.displayProfileData();
+      this.generateCharts();
+    } catch (error) {
+      console.error('Failed to load profile data:', error);
+      this.showError(error.message);
     }
+  }
 
-    updateWelcomeMessage() {
-        const username = Auth.getUsername();
-        const welcomeElement = document.getElementById('welcomeUser');
-        if (welcomeElement && username) {
-            welcomeElement.textContent = `Welcome, ${username}`;
-        }
-    }
+  displayProfileData() {
+    if (!this.profileData) return;
 
-    async loadProfileData() {
-        this.showLoading();
+    const { user, stats, skills } = this.profileData;
 
-        try {
-            this.profileData = await this.api.getProfileData();
+    // Update user information
+    this.updateElement('user-name', user.name);
+    this.updateElement('user-email', user.email);
+    this.updateElement('user-login', `@${user.username}`);
+    this.updateElement('user-initials', user.initials);
 
-            this.displayProfileData();
-            this.showProfile();
-        } catch (error) {
-            console.error('Failed to load profile data:', error);
-            this.showError(error.message);
-        }
-    }
+    // Update XP information
+    this.updateElement('total-xp', `${stats.totalXP.toLocaleString()} XP`);
+    this.updateElement('xp-level', `Level ${Math.floor(stats.totalXP / 1000)}`);
 
-    displayProfileData() {
-        if (!this.profileData) return;
+    // Update audit information
+    const auditRatio = this.calculateAuditRatio(stats);
+    this.updateElement('audit-ratio', auditRatio.toFixed(2));
+    this.updateElement('audit-up', `${stats.upVotes || 0} ↑`);
+    this.updateElement('audit-down', `${stats.downVotes || 0} ↓`);
 
-        const { user, stats, currentProject, recentProject, skills, timeline } = this.profileData;
-
-        // Update user information
-        this.updateElement('userName', user.name);
-        this.updateElement('userEmail', user.email);
-        this.updateElement('userJoinDate', `Member since ${user.joinDate}`);
-        this.updateElement('userInitials', user.initials);
-        this.updateElement('userXP', stats.totalXP.toLocaleString());
-
-        // Update audit information
-        const auditRatio = this.calculateAuditRatio(stats);
-        this.updateElement('auditRatio', auditRatio.toFixed(1));
-        this.updateElement('auditRatioDisplay', auditRatio.toFixed(2));
-        this.updateElement('upVotes', stats.upVotes || 0);
-        this.updateElement('downVotes', stats.downVotes || 0);
-
-        // Update audit performance
-        this.updateAuditPerformance(auditRatio);
-
-        // Update skills
-        this.updateSkillsDisplay(skills);
-
-        // Generate charts
-        this.generateCharts(timeline, stats);
-    }
+    // Update skills
+    this.updateSkillsDisplay(skills);
+  }
 
     updateElement(id, content) {
         const element = document.getElementById(id);
@@ -142,38 +121,26 @@ class ProfilePage {
         }
     }
 
-    updateSkillsDisplay(skills) {
-        const skillsContainer = document.querySelector('.skills-container');
-        if (!skillsContainer || !skills.length) return;
+  updateSkillsDisplay(skills) {
+    const skillsContainer = document.getElementById('skills-container');
+    if (!skillsContainer) return;
 
-        // Clear existing skills
-        skillsContainer.innerHTML = '';
-
-        // Add skills based on actual data
-        skills.forEach(skill => {
-            const skillElement = this.createSkillElement(skill);
-            skillsContainer.appendChild(skillElement);
-        });
+    if (!skills || skills.length === 0) {
+      skillsContainer.innerHTML = '<p>No skills data available</p>';
+      return;
     }
 
-    createSkillElement(skill) {
-        const skillDiv = document.createElement('div');
-        skillDiv.className = 'skill-item';
+    // Clear existing skills
+    skillsContainer.innerHTML = '';
 
-        const skillName = skill.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-        const skillLevel = this.getSkillLevel(skill.count);
-        const skillProgress = Math.min((skill.count / 10) * 100, 100); // Max 100%
-
-        skillDiv.innerHTML = `
-            <span class="skill-name">${skillName}</span>
-            <div class="skill-progress">
-                <div class="skill-bar" style="width: ${skillProgress}%;"></div>
-            </div>
-            <span class="skill-level">${skillLevel}</span>
-        `;
-
-        return skillDiv;
-    }
+    // Add skills as tags
+    skills.forEach(skill => {
+      const skillTag = document.createElement('span');
+      skillTag.className = 'skill-tag';
+      skillTag.textContent = skill.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      skillsContainer.appendChild(skillTag);
+    });
+  }
 
     getSkillLevel(count) {
         if (count >= 20) return 'Expert';
@@ -183,11 +150,159 @@ class ProfilePage {
         return 'Learning';
     }
 
-    generateCharts(timeline, stats) {
-        // Generate enhanced charts with better data
-        this.generateXPProgressChart();
-        this.generateAuditActivityChart();
-    }
+  generateCharts() {
+    this.generateXPChart();
+    this.generateGradeChart();
+  }
+
+  generateXPChart() {
+    const container = document.getElementById('xp-chart');
+    if (!container || !this.profileData) return;
+
+    // Clear previous chart
+    container.innerHTML = '';
+
+    // Sample XP data - in real implementation, this would come from transactions
+    const xpData = [
+      { date: '2024-01', xp: 1000 },
+      { date: '2024-02', xp: 2500 },
+      { date: '2024-03', xp: 4200 },
+      { date: '2024-04', xp: 6800 },
+      { date: '2024-05', xp: 9500 },
+      { date: '2024-06', xp: this.profileData.stats.totalXP }
+    ];
+
+    this.createLineChart(container, xpData, 'date', 'xp', 'XP Progress');
+  }
+
+  generateGradeChart() {
+    const container = document.getElementById('grade-chart');
+    if (!container || !this.profileData) return;
+
+    // Clear previous chart
+    container.innerHTML = '';
+
+    // Sample grade distribution data
+    const gradeData = [
+      { grade: 'A (90-100%)', count: 3 },
+      { grade: 'B (80-89%)', count: 5 },
+      { grade: 'C (70-79%)', count: 2 },
+      { grade: 'D (60-69%)', count: 1 },
+      { grade: 'F (<60%)', count: 0 }
+    ];
+
+    this.createBarChart(container, gradeData, 'grade', 'count', 'Grade Distribution');
+  }
+
+  createLineChart(container, data, xKey, yKey, title) {
+    const margin = { top: 20, right: 30, bottom: 40, left: 50 };
+    const width = container.clientWidth - margin.left - margin.right;
+    const height = 250 - margin.top - margin.bottom;
+
+    const svg = d3.select(container)
+      .append('svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom);
+
+    const g = svg.append('g')
+      .attr('transform', `translate(${margin.left},${margin.top})`);
+
+    // Scales
+    const xScale = d3.scalePoint()
+      .domain(data.map(d => d[xKey]))
+      .range([0, width]);
+
+    const yScale = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d[yKey])])
+      .range([height, 0]);
+
+    // Line generator
+    const line = d3.line()
+      .x(d => xScale(d[xKey]))
+      .y(d => yScale(d[yKey]))
+      .curve(d3.curveMonotoneX);
+
+    // Add axes
+    g.append('g')
+      .attr('transform', `translate(0,${height})`)
+      .call(d3.axisBottom(xScale))
+      .selectAll('text')
+      .style('fill', '#cbd5e1');
+
+    g.append('g')
+      .call(d3.axisLeft(yScale))
+      .selectAll('text')
+      .style('fill', '#cbd5e1');
+
+    // Add line
+    g.append('path')
+      .datum(data)
+      .attr('fill', 'none')
+      .attr('stroke', '#3b82f6')
+      .attr('stroke-width', 2)
+      .attr('d', line);
+
+    // Add dots
+    g.selectAll('.dot')
+      .data(data)
+      .enter().append('circle')
+      .attr('class', 'dot')
+      .attr('cx', d => xScale(d[xKey]))
+      .attr('cy', d => yScale(d[yKey]))
+      .attr('r', 4)
+      .attr('fill', '#3b82f6');
+  }
+
+  createBarChart(container, data, xKey, yKey, title) {
+    const margin = { top: 20, right: 30, bottom: 60, left: 50 };
+    const width = container.clientWidth - margin.left - margin.right;
+    const height = 250 - margin.top - margin.bottom;
+
+    const svg = d3.select(container)
+      .append('svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom);
+
+    const g = svg.append('g')
+      .attr('transform', `translate(${margin.left},${margin.top})`);
+
+    // Scales
+    const xScale = d3.scaleBand()
+      .domain(data.map(d => d[xKey]))
+      .range([0, width])
+      .padding(0.1);
+
+    const yScale = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d[yKey])])
+      .range([height, 0]);
+
+    // Add axes
+    g.append('g')
+      .attr('transform', `translate(0,${height})`)
+      .call(d3.axisBottom(xScale))
+      .selectAll('text')
+      .style('fill', '#cbd5e1')
+      .style('text-anchor', 'end')
+      .attr('dx', '-.8em')
+      .attr('dy', '.15em')
+      .attr('transform', 'rotate(-45)');
+
+    g.append('g')
+      .call(d3.axisLeft(yScale))
+      .selectAll('text')
+      .style('fill', '#cbd5e1');
+
+    // Add bars
+    g.selectAll('.bar')
+      .data(data)
+      .enter().append('rect')
+      .attr('class', 'bar')
+      .attr('x', d => xScale(d[xKey]))
+      .attr('width', xScale.bandwidth())
+      .attr('y', d => yScale(d[yKey]))
+      .attr('height', d => height - yScale(d[yKey]))
+      .attr('fill', '#06b6d4');
+  }
 
     async generateXPProgressChart() {
         const chartContainer = document.getElementById('progressChart');
@@ -700,4 +815,29 @@ class ProfilePage {
     }
 }
 
-// ProfilePage class is now initialized manually from HTML
+  showError(message) {
+    const errorDiv = document.getElementById('error-message');
+    if (errorDiv) {
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+    }
+  }
+
+  updateElement(id, content) {
+    const element = document.getElementById(id);
+    if (element) {
+      element.textContent = content;
+    }
+  }
+
+  calculateAuditRatio(stats) {
+    const totalVotes = (stats.upVotes || 0) + (stats.downVotes || 0);
+    if (totalVotes === 0) return 0;
+    return (stats.upVotes || 0) / totalVotes;
+  }
+}
+
+// Initialize profile manager when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  new ProfileManager();
+});
