@@ -56,7 +56,24 @@ class ProfilePage {
         this.showLoading();
 
         try {
+            // Debug: Check what user ID we're using
+            const userId = this.api.getUserIdFromToken();
+            console.log('🔍 Extracted User ID from token:', userId);
+
+            // Debug: Check token payload
+            const token = Auth.getToken();
+            if (token) {
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    console.log('🔍 Full JWT payload:', payload);
+                } catch (e) {
+                    console.error('Error parsing token:', e);
+                }
+            }
+
             this.profileData = await this.api.getProfileData();
+            console.log('🔍 Fetched profile data:', this.profileData);
+
             this.displayProfileData();
             this.showProfile();
         } catch (error) {
