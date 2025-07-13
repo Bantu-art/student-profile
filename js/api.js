@@ -154,20 +154,12 @@ class GraphQLAPI {
 
         try {
             // Fetch all data in parallel
-            console.log('🔍 Fetching data for user ID:', userId);
-
             const [userInfo, progress, results, transactions] = await Promise.all([
                 this.getUserInfo(userId),
                 this.getUserProgress(userId),
                 this.getUserResults(userId),
                 this.getUserTransactions(userId)
             ]);
-
-            // Debug: Log raw data
-            console.log('🔍 Raw user info:', userInfo);
-            console.log('🔍 Raw progress data:', progress);
-            console.log('🔍 Raw results data:', results);
-            console.log('🔍 Raw transactions data:', transactions);
 
             // Process the data
             const profileData = this.processProfileData({
@@ -176,8 +168,6 @@ class GraphQLAPI {
                 results: results,
                 transactions: transactions
             });
-
-            console.log('🔍 Processed profile data:', profileData);
             return profileData;
 
         } catch (error) {

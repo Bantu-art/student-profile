@@ -35,7 +35,7 @@ class Auth {
             }
         });
 
-        console.log('Auth initialized'); // Debug log
+
     }
 
     async handleLogin(event) {
@@ -43,12 +43,8 @@ class Auth {
             event.preventDefault();
         }
 
-        console.log('Login attempt started'); // Debug log
-
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
-
-        console.log('Username:', username); // Debug log (don't log password)
 
         if (!username || !password) {
             this.showError('Please enter both username/email and password');
@@ -59,18 +55,13 @@ class Auth {
         this.hideError();
 
         try {
-            console.log('Attempting authentication...'); // Debug log
             const token = await this.authenticate(username, password);
 
             if (token) {
-                console.log('Authentication successful, token received'); // Debug log
-
                 // Save token and user info
                 localStorage.setItem('jwt_token', token);
                 localStorage.setItem('username', username);
                 localStorage.setItem('login_time', new Date().toISOString());
-
-                console.log('Token saved, redirecting to profile...'); // Debug log
 
                 // Small delay to ensure storage is complete
                 setTimeout(() => {
@@ -92,8 +83,6 @@ class Auth {
             // Create base64 encoded credentials
             const credentials = btoa(`${username}:${password}`);
 
-            console.log('Making authentication request...'); // Debug log
-
             const response = await fetch(this.apiUrl, {
                 method: 'POST',
                 headers: {
@@ -102,11 +91,8 @@ class Auth {
                 }
             });
 
-            console.log('Response status:', response.status); // Debug log
-
             if (response.ok) {
                 const token = await response.text();
-                console.log('Token received, length:', token.length); // Debug log
 
                 // Remove quotes if present
                 const cleanToken = token.replace(/"/g, '');
@@ -119,7 +105,6 @@ class Auth {
                 }
             } else {
                 const errorText = await response.text();
-                console.error('Authentication failed:', response.status, errorText); // Debug log
                 throw new Error(`Authentication failed: ${response.status} - ${errorText}`);
             }
         } catch (error) {

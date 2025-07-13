@@ -54,7 +54,7 @@
 
     <div class="debug-section">
         <h2>3. Manual Login Test</h2>
-        <input type="text" id="testUsername" placeholder="Username" value="bbantu">
+        <input type="text" id="testUsername" placeholder="Username" value="">
         <input type="password" id="testPassword" placeholder="Password">
         <button onclick="testLogin()">Test Login</button>
         <div id="loginResult"></div>
@@ -202,18 +202,16 @@
                     resultDiv.innerHTML += `<p>payload.user_id: <strong>${userId3}</strong></p>`;
                     resultDiv.innerHTML += `<p>payload.id: <strong>${userId4}</strong></p>`;
 
-                    resultDiv.innerHTML += '<h4>🎯 Expected User ID: <strong>9052</strong></h4>';
-
                     // Test if GraphQLAPI is available
                     if (typeof GraphQLAPI !== 'undefined') {
                         const api = new GraphQLAPI();
                         const extractedId = api.getUserIdFromToken();
                         resultDiv.innerHTML += `<p>API extracted ID: <strong>${extractedId}</strong></p>`;
 
-                        if (extractedId == 9052) {
-                            resultDiv.innerHTML += '<p style="color: green;">✅ Correct user ID extracted!</p>';
+                        if (extractedId) {
+                            resultDiv.innerHTML += '<p style="color: green;">✅ User ID extracted successfully!</p>';
                         } else {
-                            resultDiv.innerHTML += '<p style="color: red;">❌ Wrong user ID extracted!</p>';
+                            resultDiv.innerHTML += '<p style="color: red;">❌ Failed to extract user ID!</p>';
                         }
                     }
 

@@ -9,11 +9,8 @@ class ProfilePage {
     }
 
     init() {
-        console.log('ProfilePage initializing...');
-
         // Check authentication first
         if (!Auth.requireAuth()) {
-            console.log('Authentication failed, redirecting...');
             return;
         }
 
@@ -56,23 +53,7 @@ class ProfilePage {
         this.showLoading();
 
         try {
-            // Debug: Check what user ID we're using
-            const userId = this.api.getUserIdFromToken();
-            console.log('🔍 Extracted User ID from token:', userId);
-
-            // Debug: Check token payload
-            const token = Auth.getToken();
-            if (token) {
-                try {
-                    const payload = JSON.parse(atob(token.split('.')[1]));
-                    console.log('🔍 Full JWT payload:', payload);
-                } catch (e) {
-                    console.error('Error parsing token:', e);
-                }
-            }
-
             this.profileData = await this.api.getProfileData();
-            console.log('🔍 Fetched profile data:', this.profileData);
 
             this.displayProfileData();
             this.showProfile();
@@ -675,7 +656,6 @@ class ProfilePage {
 
 
     showLoading() {
-        console.log('Showing loading state');
         try {
             const loadingState = document.getElementById('loadingState');
             const errorState = document.getElementById('errorState');
@@ -690,7 +670,6 @@ class ProfilePage {
     }
 
     showError(message) {
-        console.log('Showing error state:', message);
         try {
             const loadingState = document.getElementById('loadingState');
             const errorState = document.getElementById('errorState');
@@ -707,7 +686,6 @@ class ProfilePage {
     }
 
     showProfile() {
-        console.log('Showing profile content');
         try {
             const loadingState = document.getElementById('loadingState');
             const errorState = document.getElementById('errorState');
