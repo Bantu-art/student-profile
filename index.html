@@ -1,13 +1,66 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zone01 Kisumu - Profile Login</title>
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>Zone01 Kisumu</h1>
+                <p>GraphQL Profile Dashboard</p>
+            </div>
+
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username or Email</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter your username or email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        required
+                    >
+                </div>
+
+                <button type="submit" id="loginBtn" class="login-btn">
+                    <span class="btn-text">Sign In</span>
+                    <span class="btn-loader" style="display: none;">🔄 Signing in...</span>
+                </button>
+            </form>
+
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+            <div class="login-info">
+                <h3>📊 What you'll see:</h3>
+                <ul>
+                    <li>🏆 Your XP and project progress</li>
+                    <li>📈 Interactive SVG statistics charts</li>
+                    <li>🎯 Skills development tracking</li>
+                    <li>👥 Audit performance metrics</li>
+                </ul>
+            </div>
+
+            <div class="login-footer">
+                <p>Built with GraphQL API • Zone01 Kisumu</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
 </html>
