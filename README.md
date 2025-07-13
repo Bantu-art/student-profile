@@ -1,54 +1,81 @@
-# GraphQL Profile Page
+# Zone01 Kisumu GraphQL Profile Dashboard
 
-A modern React application that creates a personalized profile page using GraphQL queries to fetch user data from the Zone01 Kisumu platform.
+A pure JavaScript application that creates a personalized profile page using GraphQL queries to fetch user data from the Zone01 Kisumu platform.
 
 ## Features
 
-- **Authentication System**: Secure login with username/email and password
-- **Profile Dashboard**: Display user information, XP, grades, audits, and skills
-- **Interactive Statistics**: SVG-based graphs showing progress and achievements
-- **Responsive Design**: Modern UI/UX with responsive layout
-- **Real-time Data**: Live GraphQL queries to fetch current user data
+- **🔐 JWT Authentication**: Secure login with username/email and password
+- **👤 Profile Dashboard**: Display user information, XP, grades, and project progress
+- **📊 Interactive Statistics**: Custom SVG-based charts with hover effects and tooltips
+- **📱 Responsive Design**: Modern UI/UX that works on all devices
+- **⚡ Real-time Data**: Live GraphQL queries to Zone01 Kisumu API
+- **🛠️ Debug Tools**: Comprehensive testing and debugging utilities
+- **🔄 Error Handling**: Robust error handling with retry mechanisms
+- **🎯 Performance**: Lightweight, no framework dependencies
 
 ## Technology Stack
 
-- **Frontend**: React 18 with Vite
-- **Styling**: Modern CSS with responsive design
-- **Authentication**: JWT token-based authentication
-- **Data Fetching**: GraphQL with custom client
-- **Visualization**: Custom SVG graphs and charts
-- **Deployment**: Ready for GitHub Pages, Netlify, or similar platforms
+- **Frontend**: Pure JavaScript (ES6+), HTML5, CSS3
+- **Styling**: Modern CSS with animations and responsive design
+- **Authentication**: JWT tokens with localStorage persistence
+- **API**: GraphQL integration with Zone01 Kisumu endpoint
+- **Charts**: Custom SVG-based interactive visualizations
+- **Server**: Simple HTTP server (Python or Node.js)
 
 ## GraphQL Endpoints
 
 - **Authentication**: `https://learn.zone01kisumu.ke/api/auth/signin`
 - **GraphQL API**: `https://learn.zone01kisumu.ke/api/graphql-engine/v1/graphql`
 
-## Development
+## Installation & Usage
 
 ```bash
-# Install dependencies
-npm install
+# Clone the repository
+git clone <repository-url>
+cd zone01-kisumu-graphql-profile
 
-# Start development server
-npm run dev
+# Start the server (Python - recommended)
+npm start
+# or
+python3 -m http.server 8000
 
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
+# Alternative: Node.js server
+npx http-server -p 8000
 ```
+
+**Open your browser:** Navigate to `http://localhost:8000`
+
+### 🔐 Login Process
+1. Enter your Zone01 Kisumu credentials:
+   - **Username**: `your_username` OR **Email**: `your_email@domain.com`
+   - **Password**: `your_password`
+2. Click "Sign In" to authenticate
+
+### 📊 Features Available
+- **Profile Dashboard**: Personal info, XP totals, project progress
+- **Interactive Charts**: XP progression and project success rates
+- **Real-time Data**: Live GraphQL queries to Zone01 Kisumu
+- **Debug Tools**: Visit `/debug.html` for troubleshooting
 
 ## Project Structure
 
 ```
-src/
-├── components/          # React components
-├── services/           # API and GraphQL services
-├── utils/              # Utility functions
-├── styles/             # CSS styles
-└── assets/             # Static assets
+zone01-kisumu-graphql-profile/
+├── index.html           # Login page
+├── profile.html         # Main dashboard
+├── debug.html          # Authentication debugging
+├── css/
+│   ├── auth.css        # Login page styles
+│   └── profile.css     # Dashboard styles
+├── js/
+│   ├── auth.js         # Authentication logic
+│   ├── api.js          # GraphQL API service
+│   └── profile.js      # Dashboard functionality
+├── tests/              # API testing scripts
+│   ├── test-auth.sh    # Authentication testing
+│   └── test-*.sh       # Various API tests
+├── package.json        # Project configuration
+└── README.md          # Documentation
 ```
 
 ## Authentication
