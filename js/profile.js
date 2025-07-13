@@ -3,20 +3,28 @@ class ProfilePage {
     constructor() {
         this.api = new GraphQLAPI();
         this.profileData = null;
-        this.isLoading = false;
+
+        // Initialize immediately since we're called after window load
         this.init();
     }
 
     init() {
+        console.log('ProfilePage initializing...');
+
         // Check authentication first
         if (!Auth.requireAuth()) {
+            console.log('Authentication failed, redirecting...');
             return;
         }
 
-        // Initialize immediately
+        // Setup event listeners
         this.setupEventListeners();
         this.updateWelcomeMessage();
-        this.loadProfileData();
+
+        // Load data after a small delay to ensure everything is ready
+        setTimeout(() => {
+            this.loadProfileData();
+        }, 500);
     }
 
     setupEventListeners() {
@@ -610,48 +618,51 @@ class ProfilePage {
 
 
     showLoading() {
-        const loadingState = document.getElementById('loadingState');
-        const errorState = document.getElementById('errorState');
-        const profileContent = document.getElementById('profileContent');
+        console.log('Showing loading state');
+        try {
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const profileContent = document.getElementById('profileContent');
 
-        if (loadingState && errorState && profileContent) {
-            loadingState.style.display = 'block';
-            errorState.style.display = 'none';
-            profileContent.style.display = 'none';
+            if (loadingState) loadingState.style.display = 'block';
+            if (errorState) errorState.style.display = 'none';
+            if (profileContent) profileContent.style.display = 'none';
+        } catch (error) {
+            console.error('Error in showLoading:', error);
         }
     }
 
     showError(message) {
-        const loadingState = document.getElementById('loadingState');
-        const errorState = document.getElementById('errorState');
-        const profileContent = document.getElementById('profileContent');
-        const errorMessage = document.getElementById('errorMessage');
+        console.log('Showing error state:', message);
+        try {
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const profileContent = document.getElementById('profileContent');
+            const errorMessage = document.getElementById('errorMessage');
 
-        if (errorMessage) {
-            errorMessage.textContent = message;
-        }
-
-        if (loadingState && errorState && profileContent) {
-            loadingState.style.display = 'none';
-            errorState.style.display = 'block';
-            profileContent.style.display = 'none';
+            if (errorMessage) errorMessage.textContent = message;
+            if (loadingState) loadingState.style.display = 'none';
+            if (errorState) errorState.style.display = 'block';
+            if (profileContent) profileContent.style.display = 'none';
+        } catch (error) {
+            console.error('Error in showError:', error);
         }
     }
 
     showProfile() {
-        const loadingState = document.getElementById('loadingState');
-        const errorState = document.getElementById('errorState');
-        const profileContent = document.getElementById('profileContent');
+        console.log('Showing profile content');
+        try {
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const profileContent = document.getElementById('profileContent');
 
-        if (loadingState && errorState && profileContent) {
-            loadingState.style.display = 'none';
-            errorState.style.display = 'none';
-            profileContent.style.display = 'block';
+            if (loadingState) loadingState.style.display = 'none';
+            if (errorState) errorState.style.display = 'none';
+            if (profileContent) profileContent.style.display = 'block';
+        } catch (error) {
+            console.error('Error in showProfile:', error);
         }
     }
 }
 
-// Initialize profile page when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    new ProfilePage();
-});
+// ProfilePage class is now initialized manually from HTML

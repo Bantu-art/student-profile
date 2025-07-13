@@ -23,14 +23,14 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Loading State -->
-        <div id="loadingState" class="loading-container">
+        <!-- Loading State - Default visible -->
+        <div id="loadingState" class="loading-container" style="display: block;">
             <div class="loading-spinner"></div>
             <h2>Loading your profile...</h2>
             <p>Fetching your latest data from Zone01 Kisumu</p>
         </div>
 
-        <!-- Error State -->
+        <!-- Error State - Hidden by default -->
         <div id="errorState" class="error-container" style="display: none;">
             <div class="error-icon">⚠️</div>
             <h2>Unable to load profile data</h2>
@@ -38,7 +38,7 @@
             <button id="retryBtn" class="retry-btn">Try Again</button>
         </div>
 
-        <!-- Profile Content -->
+        <!-- Profile Content - Hidden by default -->
         <div id="profileContent" class="profile-container" style="display: none;">
             
             <!-- User Info Section -->
@@ -163,9 +163,18 @@
         </div>
     </main>
 
-    <!-- Scripts -->
+    <!-- Scripts - Load in specific order -->
     <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
+    <script>
+        // Initialize profile page only after everything is loaded
+        window.addEventListener('load', function() {
+            console.log('Window loaded, initializing profile...');
+            setTimeout(() => {
+                new ProfilePage();
+            }, 100);
+        });
+    </script>
     <script src="js/profile.js"></script>
 </body>
 </html>
