@@ -190,6 +190,10 @@ class GraphQLAPI {
         const upVotes = auditTransactions.filter(t => t.type === 'up').length;
         const downVotes = auditTransactions.filter(t => t.type === 'down').length;
 
+        // Calculate audit ratio (simplified version)
+        const totalAuditVotes = upVotes + downVotes;
+        const auditRatio = totalAuditVotes > 0 ? upVotes / totalAuditVotes : 0;
+
         // Process projects (from progress data)
         const projects = progress.filter(p => p.object && p.object.type === 'project');
         const currentProject = projects[0]; // Most recent
@@ -216,7 +220,9 @@ class GraphQLAPI {
                 totalProjects: projects.length,
                 completedProjects: completedProjects.length,
                 upVotes: upVotes,
-                downVotes: downVotes
+                downVotes: downVotes,
+                auditRatio: auditRatio,
+                totalAuditVotes: totalAuditVotes
             },
             currentProject: currentProject ? {
                 name: currentProject.object.name,

@@ -61,39 +61,54 @@
                             <span class="stat-label">Total XP</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-value" id="userProjects">0</span>
-                            <span class="stat-label">Projects</span>
+                            <span class="stat-value" id="auditRatio">0.0</span>
+                            <span class="stat-label">Audit Ratio</span>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Project Progress Section -->
+            <!-- Audit Performance Section -->
             <section class="profile-section">
                 <div class="section-header">
-                    <h2>🚀 Project Progress</h2>
+                    <h2>👥 Audit Performance</h2>
                 </div>
-                <div class="projects-grid">
-                    <div class="project-card current">
-                        <div class="project-status">Current</div>
-                        <h3 id="currentProject">GraphQL</h3>
-                        <p id="currentProjectDate">Started June 28, 2025</p>
-                        <div class="project-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 60%;"></div>
-                            </div>
-                            <span>In Progress</span>
+                <div class="audit-grid">
+                    <div class="audit-card ratio">
+                        <div class="audit-icon">⚖️</div>
+                        <h3>Audit Ratio</h3>
+                        <div class="audit-value">
+                            <span id="auditRatioDisplay">0.0</span>
                         </div>
+                        <p class="audit-description">Your peer review accuracy</p>
                     </div>
-                    
-                    <div class="project-card completed">
-                        <div class="project-status success">Completed</div>
-                        <h3 id="recentProject">Real-time Forum</h3>
-                        <p id="recentProjectDate">Completed May 9, 2025</p>
-                        <div class="project-grade">
-                            <span class="grade-value" id="recentGrade">110.4%</span>
-                            <span class="grade-label">Excellent!</span>
+
+                    <div class="audit-card votes">
+                        <div class="audit-icon">👍</div>
+                        <h3>Audit Votes</h3>
+                        <div class="audit-stats">
+                            <div class="vote-stat up">
+                                <span id="upVotes">0</span>
+                                <label>Up Votes</label>
+                            </div>
+                            <div class="vote-stat down">
+                                <span id="downVotes">0</span>
+                                <label>Down Votes</label>
+                            </div>
                         </div>
+                        <p class="audit-description">Your voting history</p>
+                    </div>
+
+                    <div class="audit-card performance">
+                        <div class="audit-icon">🎯</div>
+                        <h3>Review Quality</h3>
+                        <div class="performance-indicator">
+                            <div class="performance-bar">
+                                <div class="performance-fill" id="performanceFill" style="width: 0%;"></div>
+                            </div>
+                            <span id="performanceLabel">Calculating...</span>
+                        </div>
+                        <p class="audit-description">Based on audit ratio</p>
                     </div>
                 </div>
             </section>
@@ -113,9 +128,9 @@
                         </div>
                     </div>
 
-                    <!-- Chart 2: Project Success Rate -->
+                    <!-- Chart 2: Audit Activity -->
                     <div class="chart-card">
-                        <h3>📊 Project Success Distribution</h3>
+                        <h3>👥 Audit Activity Distribution</h3>
                         <div id="gradeChart" class="chart-area">
                             <!-- SVG chart will be inserted here -->
                         </div>

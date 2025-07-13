@@ -239,84 +239,117 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* Projects Grid */
-.projects-grid {
+/* Audit Grid */
+.audit-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
 }
 
-.project-card {
+.audit-card {
     background: #f8fafc;
-    border-radius: 8px;
-    padding: 20px;
-    border-left: 4px solid #e5e7eb;
-    position: relative;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    border: 2px solid #e5e7eb;
+    transition: all 0.3s ease;
 }
 
-.project-card.current {
-    border-left-color: #3b82f6;
-    background: linear-gradient(135deg, #dbeafe 0%, #f0f9ff 100%);
+.audit-card:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
 }
 
-.project-card.completed {
-    border-left-color: #10b981;
-    background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%);
+.audit-card.ratio {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-color: #0ea5e9;
 }
 
-.project-status {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: #6b7280;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
+.audit-card.votes {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-color: #22c55e;
 }
 
-.project-status.success {
-    background: #10b981;
+.audit-card.performance {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-color: #f59e0b;
 }
 
-.project-card h3 {
+.audit-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.audit-card h3 {
     color: #374151;
     font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.audit-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: #0ea5e9;
+    margin-bottom: 8px;
+}
+
+.audit-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 16px;
+}
+
+.vote-stat {
+    text-align: center;
+}
+
+.vote-stat span {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
     margin-bottom: 4px;
 }
 
-.project-card p {
-    color: #6b7280;
-    font-size: 14px;
-    margin-bottom: 12px;
+.vote-stat.up span {
+    color: #22c55e;
 }
 
-.progress-bar {
+.vote-stat.down span {
+    color: #ef4444;
+}
+
+.vote-stat label {
+    font-size: 12px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.performance-indicator {
+    margin-bottom: 16px;
+}
+
+.performance-bar {
     background: #e5e7eb;
-    height: 8px;
-    border-radius: 4px;
+    height: 12px;
+    border-radius: 6px;
     overflow: hidden;
     margin-bottom: 8px;
 }
 
-.progress-fill {
-    background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
+.performance-fill {
     height: 100%;
-    border-radius: 4px;
-    transition: width 0.3s ease;
+    border-radius: 6px;
+    transition: width 0.5s ease;
+    background: linear-gradient(90deg, #ef4444 0%, #f59e0b 50%, #22c55e 100%);
 }
 
-.grade-value {
-    color: #10b981;
-    font-size: 24px;
-    font-weight: 700;
-}
-
-.grade-label {
+.audit-description {
     color: #6b7280;
     font-size: 14px;
-    margin-left: 8px;
+    margin: 0;
 }
 
 /* Charts Container */

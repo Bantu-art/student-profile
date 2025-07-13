@@ -76,20 +76,16 @@ class ProfilePage {
         this.updateElement('userJoinDate', `Member since ${user.joinDate}`);
         this.updateElement('userInitials', user.initials);
         this.updateElement('userXP', stats.totalXP.toLocaleString());
-        this.updateElement('userProjects', stats.totalProjects);
 
-        // Update current project
-        if (currentProject) {
-            this.updateElement('currentProject', currentProject.name);
-            this.updateElement('currentProjectDate', `Started ${currentProject.startDate}`);
-        }
+        // Update audit information
+        const auditRatio = this.calculateAuditRatio(stats);
+        this.updateElement('auditRatio', auditRatio.toFixed(1));
+        this.updateElement('auditRatioDisplay', auditRatio.toFixed(2));
+        this.updateElement('upVotes', stats.upVotes || 0);
+        this.updateElement('downVotes', stats.downVotes || 0);
 
-        // Update recent project
-        if (recentProject) {
-            this.updateElement('recentProject', recentProject.name);
-            this.updateElement('recentProjectDate', `Completed ${recentProject.completedDate}`);
-            this.updateElement('recentGrade', `${(recentProject.grade * 100).toFixed(1)}%`);
-        }
+        // Update audit performance
+        this.updateAuditPerformance(auditRatio);
 
         // Update skills
         this.updateSkillsDisplay(skills);
@@ -102,6 +98,49 @@ class ProfilePage {
         const element = document.getElementById(id);
         if (element) {
             element.textContent = content;
+        }
+    }
+
+    calculateAuditRatio(stats) {
+        // Audit ratio = XP received / XP given through audits
+        // For now, we'll use a simplified calculation based on up/down votes
+        const totalVotes = (stats.upVotes || 0) + (stats.downVotes || 0);
+        if (totalVotes === 0) return 0;
+
+        // Simple ratio: up votes / total votes
+        // In a real implementation, this would be based on actual XP transactions
+        return (stats.upVotes || 0) / totalVotes;
+    }
+
+    updateAuditPerformance(auditRatio) {
+        const performanceFill = document.getElementById('performanceFill');
+        const performanceLabel = document.getElementById('performanceLabel');
+
+        if (performanceFill && performanceLabel) {
+            // Convert ratio to percentage for display
+            const percentage = auditRatio * 100;
+            performanceFill.style.width = `${percentage}%`;
+
+            // Set performance label based on ratio
+            let label = '';
+            if (auditRatio >= 0.8) {
+                label = 'Excellent';
+                performanceFill.style.background = '#22c55e';
+            } else if (auditRatio >= 0.6) {
+                label = 'Good';
+                performanceFill.style.background = 'linear-gradient(90deg, #f59e0b 0%, #22c55e 100%)';
+            } else if (auditRatio >= 0.4) {
+                label = 'Average';
+                performanceFill.style.background = '#f59e0b';
+            } else if (auditRatio > 0) {
+                label = 'Needs Improvement';
+                performanceFill.style.background = 'linear-gradient(90deg, #ef4444 0%, #f59e0b 100%)';
+            } else {
+                label = 'No Data';
+                performanceFill.style.background = '#6b7280';
+            }
+
+            performanceLabel.textContent = label;
         }
     }
 
@@ -149,7 +188,7 @@ class ProfilePage {
     generateCharts(timeline, stats) {
         // Generate enhanced charts with better data
         this.generateXPProgressChart();
-        this.generateProjectSuccessChart();
+        this.generateAuditActivityChart();
     }
 
     async generateXPProgressChart() {
@@ -204,41 +243,41 @@ class ProfilePage {
         }
     }
 
-    async generateProjectSuccessChart() {
+    async generateAuditActivityChart() {
         const chartContainer = document.getElementById('gradeChart');
         if (!chartContainer) return;
 
         try {
-            // Get progress data for projects
+            // Get audit transaction data
             const userId = this.api.getUserIdFromToken();
-            const progress = await this.api.getUserProgress(userId, 50);
-            const projects = progress.filter(p => p.object && p.object.type === 'project');
+            const transactions = await this.api.getUserTransactions(userId, 100);
+            const auditData = transactions.filter(t => ['up', 'down'].includes(t.type));
 
-            if (projects.length === 0) {
+            if (auditData.length === 0) {
                 chartContainer.innerHTML = `
                     <div style="text-align: center; padding: 40px; color: #6b7280;">
-                        <p>🎯 No project data available</p>
-                        <p style="font-size: 14px;">Start working on projects to see your success rate</p>
+                        <p>👥 No audit data available</p>
+                        <p style="font-size: 14px;">Participate in peer reviews to see your audit activity</p>
                     </div>
                 `;
                 return;
             }
 
-            // Process project success data
-            const projectStats = this.processProjectStats(projects);
+            // Process audit activity data
+            const auditStats = this.processAuditStats(auditData);
 
             // Create enhanced SVG chart
-            const svg = this.createEnhancedSVGChart(400, 250, 'Project Success Rate');
-            this.drawProjectSuccessChart(svg, projectStats, 400, 250);
+            const svg = this.createEnhancedSVGChart(400, 250, 'Audit Activity Distribution');
+            this.drawAuditActivityChart(svg, auditStats, 400, 250);
 
             chartContainer.innerHTML = '';
             chartContainer.appendChild(svg);
 
         } catch (error) {
-            console.error('Error generating project chart:', error);
+            console.error('Error generating audit chart:', error);
             chartContainer.innerHTML = `
                 <div style="text-align: center; padding: 40px; color: #ef4444;">
-                    <p>⚠️ Error loading project data</p>
+                    <p>⚠️ Error loading audit data</p>
                     <p style="font-size: 14px;">${error.message}</p>
                 </div>
             `;
@@ -270,39 +309,46 @@ class ProfilePage {
         return svg;
     }
 
-    processProjectStats(projects) {
+    processAuditStats(auditData) {
         const stats = {
-            excellent: 0,    // > 80%
-            good: 0,         // 60-80%
-            average: 0,      // 40-60%
-            needsWork: 0,    // < 40%
-            inProgress: 0    // null grade
+            upVotes: 0,
+            downVotes: 0,
+            totalVotes: 0
         };
 
-        const projectDetails = [];
+        const auditDetails = [];
 
-        projects.forEach(project => {
+        auditData.forEach(audit => {
             const detail = {
-                name: project.object.name,
-                grade: project.grade,
-                date: new Date(project.createdAt),
-                status: project.grade === null ? 'in-progress' : 'completed'
+                type: audit.type,
+                amount: audit.amount,
+                date: new Date(audit.createdAt),
+                path: audit.path
             };
 
-            if (project.grade === null) {
-                stats.inProgress++;
-            } else {
-                const percentage = project.grade * 100;
-                if (percentage >= 80) stats.excellent++;
-                else if (percentage >= 60) stats.good++;
-                else if (percentage >= 40) stats.average++;
-                else stats.needsWork++;
+            if (audit.type === 'up') {
+                stats.upVotes++;
+            } else if (audit.type === 'down') {
+                stats.downVotes++;
             }
+            stats.totalVotes++;
 
-            projectDetails.push(detail);
+            auditDetails.push(detail);
         });
 
-        return { stats, details: projectDetails };
+        // Calculate ratio and performance metrics
+        stats.ratio = stats.totalVotes > 0 ? stats.upVotes / stats.totalVotes : 0;
+        stats.performance = this.getAuditPerformanceLevel(stats.ratio);
+
+        return { stats, details: auditDetails };
+    }
+
+    getAuditPerformanceLevel(ratio) {
+        if (ratio >= 0.8) return 'Excellent';
+        if (ratio >= 0.6) return 'Good';
+        if (ratio >= 0.4) return 'Average';
+        if (ratio > 0) return 'Needs Improvement';
+        return 'No Data';
     }
 
     drawXPProgressChart(svg, xpData, width, height) {
@@ -412,18 +458,15 @@ class ProfilePage {
         svg.appendChild(currentText);
     }
 
-    drawProjectSuccessChart(svg, projectStats, width, height) {
-        const margin = { top: 40, right: 30, bottom: 80, left: 60 };
+    drawAuditActivityChart(svg, auditStats, width, height) {
+        const margin = { top: 40, right: 30, bottom: 60, left: 60 };
         const chartWidth = width - margin.left - margin.right;
         const chartHeight = height - margin.top - margin.bottom;
 
-        const { stats } = projectStats;
+        const { stats } = auditStats;
         const categories = [
-            { label: 'Excellent\n(>80%)', count: stats.excellent, color: '#10b981' },
-            { label: 'Good\n(60-80%)', count: stats.good, color: '#3b82f6' },
-            { label: 'Average\n(40-60%)', count: stats.average, color: '#f59e0b' },
-            { label: 'Needs Work\n(<40%)', count: stats.needsWork, color: '#ef4444' },
-            { label: 'In Progress', count: stats.inProgress, color: '#6b7280' }
+            { label: 'Up Votes', count: stats.upVotes, color: '#22c55e' },
+            { label: 'Down Votes', count: stats.downVotes, color: '#ef4444' }
         ];
 
         const maxCount = Math.max(...categories.map(c => c.count));
@@ -433,13 +476,13 @@ class ProfilePage {
             noDataText.setAttribute('y', height / 2);
             noDataText.setAttribute('text-anchor', 'middle');
             noDataText.setAttribute('fill', '#6b7280');
-            noDataText.textContent = 'No project data available';
+            noDataText.textContent = 'No audit data available';
             svg.appendChild(noDataText);
             return;
         }
 
-        const barWidth = chartWidth / categories.length * 0.7;
-        const barSpacing = chartWidth / categories.length * 0.3;
+        const barWidth = chartWidth / categories.length * 0.6;
+        const barSpacing = chartWidth / categories.length * 0.4;
 
         // Draw bars
         categories.forEach((category, i) => {
@@ -454,13 +497,13 @@ class ProfilePage {
             rect.setAttribute('width', barWidth);
             rect.setAttribute('height', barHeight);
             rect.setAttribute('fill', category.color);
-            rect.setAttribute('rx', '4');
+            rect.setAttribute('rx', '6');
             rect.style.cursor = 'pointer';
 
             // Add hover effect
             rect.addEventListener('mouseenter', () => {
                 rect.setAttribute('opacity', '0.8');
-                this.showTooltip(svg, x + barWidth/2, y, `${category.label.replace('\n', ' ')}: ${category.count} projects`);
+                this.showTooltip(svg, x + barWidth/2, y, `${category.label}: ${category.count} votes`);
             });
 
             rect.addEventListener('mouseleave', () => {
@@ -477,38 +520,35 @@ class ProfilePage {
                 countText.setAttribute('y', y - 5);
                 countText.setAttribute('text-anchor', 'middle');
                 countText.setAttribute('fill', '#374151');
-                countText.setAttribute('font-size', '14');
-                countText.setAttribute('font-weight', '600');
+                countText.setAttribute('font-size', '16');
+                countText.setAttribute('font-weight', '700');
                 countText.textContent = category.count;
                 svg.appendChild(countText);
             }
 
             // Add category label
-            const lines = category.label.split('\n');
-            lines.forEach((line, lineIndex) => {
-                const labelText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                labelText.setAttribute('x', x + barWidth / 2);
-                labelText.setAttribute('y', margin.top + chartHeight + 20 + (lineIndex * 12));
-                labelText.setAttribute('text-anchor', 'middle');
-                labelText.setAttribute('fill', '#6b7280');
-                labelText.setAttribute('font-size', '11');
-                labelText.textContent = line;
-                svg.appendChild(labelText);
-            });
+            const labelText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            labelText.setAttribute('x', x + barWidth / 2);
+            labelText.setAttribute('y', margin.top + chartHeight + 25);
+            labelText.setAttribute('text-anchor', 'middle');
+            labelText.setAttribute('fill', '#6b7280');
+            labelText.setAttribute('font-size', '14');
+            labelText.setAttribute('font-weight', '600');
+            labelText.textContent = category.label;
+            svg.appendChild(labelText);
         });
 
-        // Add success rate summary
-        const total = stats.excellent + stats.good + stats.average + stats.needsWork;
-        const successRate = total > 0 ? ((stats.excellent + stats.good) / total * 100).toFixed(1) : 0;
+        // Add audit ratio summary
+        const ratio = (stats.ratio * 100).toFixed(1);
 
         const summaryText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         summaryText.setAttribute('x', width - 10);
         summaryText.setAttribute('y', 35);
         summaryText.setAttribute('text-anchor', 'end');
-        summaryText.setAttribute('fill', '#10b981');
+        summaryText.setAttribute('fill', stats.ratio >= 0.6 ? '#22c55e' : '#f59e0b');
         summaryText.setAttribute('font-size', '16');
         summaryText.setAttribute('font-weight', '700');
-        summaryText.textContent = `${successRate}% Success Rate`;
+        summaryText.textContent = `${ratio}% Positive Rate`;
         svg.appendChild(summaryText);
     }
 
