@@ -464,24 +464,94 @@ body {
   backdrop-filter: blur(10px);
 }
 
-/* Revolutionary Skills Card */
+/* Enhanced Skills Card */
 .skills-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 12px;
+}
+
+.skill-wrapper {
+  position: relative;
 }
 
 .skill-tag {
   background: var(--bg-glass);
   border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-lg);
-  padding: 12px 20px;
-  font-size: 14px;
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-primary);
   backdrop-filter: blur(10px);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.skill-tag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+}
+
+.skill-name {
+  flex: 1;
+}
+
+.skill-count {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Skill Level Colors */
+.skill-level-expert {
+  border-color: rgba(34, 197, 94, 0.5);
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.1));
+}
+
+.skill-level-expert .skill-count {
+  background: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
+.skill-level-intermediate {
+  border-color: rgba(59, 130, 246, 0.5);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(79, 172, 254, 0.1));
+}
+
+.skill-level-intermediate .skill-count {
+  background: rgba(59, 130, 246, 0.3);
+  color: #3b82f6;
+}
+
+.skill-level-beginner {
+  border-color: rgba(245, 158, 11, 0.5);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1));
+}
+
+.skill-level-beginner .skill-count {
+  background: rgba(245, 158, 11, 0.3);
+  color: #f59e0b;
+}
+
+.skill-level-learning {
+  border-color: rgba(168, 85, 247, 0.5);
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(196, 181, 253, 0.1));
+}
+
+.skill-level-learning .skill-count {
+  background: rgba(168, 85, 247, 0.3);
+  color: #a855f7;
 }
 
 /* Revolutionary Chart Container */

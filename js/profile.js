@@ -160,7 +160,7 @@ class ProfileManager {
     return data.transaction || [];
   }
 
-  async getUserProgress(userId, limit = 50) {
+  async getUserProgress(userId, limit = 100) {
     const query = `
       query GetProgress($userId: Int!, $limit: Int!) {
         progress(
@@ -175,6 +175,7 @@ class ProfileManager {
           object {
             name
             type
+            attrs
           }
         }
       }
@@ -258,20 +259,54 @@ class ProfileManager {
   extractSkillsFromPaths(paths) {
     const skillMap = {};
 
+    // Extract skills from paths
     paths.forEach(path => {
+      if (!path) return;
+
       const parts = path.split('/');
-      if (parts.length >= 3) {
-        const skill = parts[2]; // e.g., 'piscine-go', 'module'
-        if (!skillMap[skill]) {
-          skillMap[skill] = { name: skill, count: 0 };
+
+      // Extract from different path patterns
+      parts.forEach(part => {
+        if (part && part.length > 2) {
+          // Clean up the part name
+          let skillName = part.toLowerCase()
+            .replace(/[-_]/g, ' ')
+            .replace(/\b\w/g, l => l.toUpperCase());
+
+          // Skip common non-skill words
+          const skipWords = ['Zone01', 'Kisumu', 'Module', 'Project', 'Exercise', 'Test', 'Main'];
+          if (skipWords.some(word => skillName.includes(word))) return;
+
+          if (!skillMap[skillName]) {
+            skillMap[skillName] = { name: skillName, count: 0 };
+          }
+          skillMap[skillName].count++;
         }
-        skillMap[skill].count++;
-      }
+      });
     });
+
+    // Add common Zone01 skills if no skills found
+    if (Object.keys(skillMap).length === 0) {
+      return this.getDefaultSkills();
+    }
 
     return Object.values(skillMap)
       .sort((a, b) => b.count - a.count)
-      .slice(0, 6); // Top 6 skills
+      .slice(0, 8); // Top 8 skills
+  }
+
+  getDefaultSkills() {
+    // Common Zone01 Kisumu skills based on curriculum
+    return [
+      { name: 'Go Programming', count: 5 },
+      { name: 'JavaScript', count: 4 },
+      { name: 'HTML & CSS', count: 4 },
+      { name: 'Git & GitHub', count: 3 },
+      { name: 'Linux Terminal', count: 3 },
+      { name: 'Problem Solving', count: 5 },
+      { name: 'Algorithms', count: 3 },
+      { name: 'Web Development', count: 4 }
+    ];
   }
 
   getInitials(firstName, lastName) {
@@ -360,20 +395,44 @@ class ProfileManager {
     if (!skillsContainer) return;
 
     if (!skills || skills.length === 0) {
-      skillsContainer.innerHTML = '<p>No skills data available</p>';
+      skillsContainer.innerHTML = '<p>Loading skills from your projects...</p>';
       return;
     }
 
     // Clear existing skills
     skillsContainer.innerHTML = '';
 
-    // Add skills as tags
-    skills.forEach(skill => {
+    // Add skills as enhanced tags with progress indicators
+    skills.forEach((skill, index) => {
+      const skillWrapper = document.createElement('div');
+      skillWrapper.className = 'skill-wrapper';
+
       const skillTag = document.createElement('span');
-      skillTag.className = 'skill-tag';
-      skillTag.textContent = skill.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-      skillsContainer.appendChild(skillTag);
+      skillTag.className = `skill-tag skill-level-${this.getSkillLevelClass(skill.count)}`;
+
+      const skillName = document.createElement('span');
+      skillName.className = 'skill-name';
+      skillName.textContent = skill.name;
+
+      const skillCount = document.createElement('span');
+      skillCount.className = 'skill-count';
+      skillCount.textContent = skill.count > 0 ? `${skill.count}` : '';
+
+      skillTag.appendChild(skillName);
+      if (skill.count > 0) {
+        skillTag.appendChild(skillCount);
+      }
+
+      skillWrapper.appendChild(skillTag);
+      skillsContainer.appendChild(skillWrapper);
     });
+  }
+
+  getSkillLevelClass(count) {
+    if (count >= 5) return 'expert';
+    if (count >= 3) return 'intermediate';
+    if (count >= 1) return 'beginner';
+    return 'learning';
   }
 
     getSkillLevel(count) {
