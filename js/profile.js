@@ -125,6 +125,8 @@ class ProfileManager {
           firstName
           lastName
           createdAt
+          totalUp
+          totalDown
         }
       }
     `;
@@ -222,10 +224,9 @@ class ProfileManager {
     const xpTransactions = transactions.filter(t => t.type === 'xp');
     const totalXP = xpTransactions.reduce((sum, t) => sum + (t.amount || 0), 0);
 
-    // Process audit transactions
-    const auditTransactions = transactions.filter(t => ['up', 'down'].includes(t.type));
-    const upVotes = auditTransactions.filter(t => t.type === 'up').length;
-    const downVotes = auditTransactions.filter(t => t.type === 'down').length;
+    // Use actual totalUp and totalDown from user object (not transaction counts)
+    const totalUp = user?.totalUp || 0;
+    const totalDown = user?.totalDown || 0;
 
     // Process projects (from progress data)
     const projects = progress.filter(p => p.object && p.object.type === 'project');
@@ -246,9 +247,9 @@ class ProfileManager {
       stats: {
         totalXP: totalXP,
         totalProjects: projects.length,
-        upVotes: upVotes,
-        downVotes: downVotes,
-        auditRatio: upVotes + downVotes > 0 ? upVotes / (upVotes + downVotes) : 0
+        totalUp: totalUp,
+        totalDown: totalDown,
+        auditRatio: totalDown > 0 ? totalUp / totalDown : (totalUp > 0 ? 1 : 0)
       },
       skills: skills
     };
@@ -296,10 +297,9 @@ class ProfileManager {
     this.updateElement('xp-level', `Level ${level}`);
 
     // Update audit information
-    const auditRatio = this.calculateAuditRatio(stats);
-    this.updateElement('audit-ratio', auditRatio.toFixed(2));
-    this.updateElement('audit-up', `${stats.upVotes || 0} ↑`);
-    this.updateElement('audit-down', `${stats.downVotes || 0} ↓`);
+    this.updateElement('audit-ratio', stats.auditRatio.toFixed(2));
+    this.updateElement('audit-up', `${stats.totalUp || 0} ↑`);
+    this.updateElement('audit-down', `${stats.totalDown || 0} ↓`);
 
     // Update skills
     this.updateSkillsDisplay(skills);
@@ -1064,9 +1064,17 @@ class ProfileManager {
     }
 
     calculateAuditRatio(stats) {
-        const totalVotes = (stats.upVotes || 0) + (stats.downVotes || 0);
-        if (totalVotes === 0) return 0;
-        return (stats.upVotes || 0) / totalVotes;
+        // Zone01 audit ratio formula: totalUp / totalDown
+        // If totalDown is 0 but totalUp > 0, ratio is 1.0 (perfect)
+        // If both are 0, ratio is 0
+        const totalUp = stats.totalUp || 0;
+        const totalDown = stats.totalDown || 0;
+
+        if (totalDown === 0) {
+            return totalUp > 0 ? 1.0 : 0;
+        }
+
+        return totalUp / totalDown;
     }
 
     calculateLevel(xp) {
