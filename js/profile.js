@@ -292,7 +292,8 @@ class ProfileManager {
 
     // Update XP information
     this.updateElement('total-xp', `${stats.totalXP.toLocaleString()} XP`);
-    this.updateElement('xp-level', `Level ${Math.floor(stats.totalXP / 1000)}`);
+    const level = this.calculateLevel(stats.totalXP);
+    this.updateElement('xp-level', `Level ${level}`);
 
     // Update audit information
     const auditRatio = this.calculateAuditRatio(stats);
@@ -1066,6 +1067,19 @@ class ProfileManager {
         const totalVotes = (stats.upVotes || 0) + (stats.downVotes || 0);
         if (totalVotes === 0) return 0;
         return (stats.upVotes || 0) / totalVotes;
+    }
+
+    calculateLevel(xp) {
+        // Zone01 level calculation algorithm
+        // Based on the formula used by 01 schools: level = floor(sqrt(xp / 500))
+        // This matches the actual Zone01 leveling system
+        if (xp <= 0) return 0;
+
+        // The Zone01 formula: level = floor(sqrt(xp / 500))
+        const level = Math.floor(Math.sqrt(xp / 500));
+
+        // Ensure minimum level is 1 if there's any XP
+        return Math.max(1, level);
     }
 }
 
