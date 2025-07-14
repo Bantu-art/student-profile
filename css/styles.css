@@ -76,7 +76,7 @@ body {
   box-shadow: var(--shadow-dark);
 }
 
-/* Revolutionary Button Styles */
+/* Clean Button Styles */
 .btn {
   padding: 14px 28px;
   border: none;
@@ -84,29 +84,11 @@ body {
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   font-size: 15px;
   display: inline-block;
   text-align: center;
-  position: relative;
-  overflow: hidden;
   text-transform: uppercase;
   letter-spacing: 1px;
-}
-
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-.btn:hover::before {
-  left: 100%;
 }
 
 .btn-primary {
@@ -115,31 +97,16 @@ body {
   box-shadow: var(--shadow-primary);
 }
 
-.btn-primary:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 25px 50px rgba(103, 132, 187, 0.25);
-}
-
 .btn-secondary {
   background: var(--dark-gradient);
   color: white;
   box-shadow: var(--shadow-dark);
 }
 
-.btn-secondary:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 25px 50px rgba(45, 27, 105, 0.25);
-}
-
 .btn-danger {
   background: var(--secondary-gradient);
   color: white;
   box-shadow: var(--shadow-secondary);
-}
-
-.btn-danger:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 25px 50px rgba(245, 87, 108, 0.25);
 }
 
 .btn-full {
@@ -209,12 +176,6 @@ body {
   height: auto;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-primary);
-  transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
-  transition: transform 0.6s ease;
-}
-
-.image-content img:hover {
-  transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1.05);
 }
 
 /* Revolutionary Login Page */
@@ -306,7 +267,6 @@ body {
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-size: 16px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   backdrop-filter: blur(10px);
 }
 
@@ -317,7 +277,6 @@ body {
   box-shadow:
     0 0 0 4px rgba(0, 242, 254, 0.1),
     0 8px 25px rgba(0, 242, 254, 0.15);
-  transform: translateY(-2px);
 }
 
 .form-group input::placeholder {
@@ -325,12 +284,7 @@ body {
   font-style: italic;
 }
 
-.form-group input:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.07);
-}
-
-/* Revolutionary Error Message */
+/* Clean Error Message */
 .error-message {
   background: linear-gradient(135deg, rgba(245, 87, 108, 0.1) 0%, rgba(255, 119, 198, 0.1) 100%);
   border: 2px solid rgba(245, 87, 108, 0.3);
@@ -343,12 +297,6 @@ body {
   font-weight: 500;
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 25px rgba(245, 87, 108, 0.15);
-  animation: errorPulse 2s ease-in-out infinite;
-}
-
-@keyframes errorPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.02); }
 }
 
 /* Revolutionary Profile Page */
@@ -382,7 +330,7 @@ body {
   z-index: 2;
 }
 
-/* Revolutionary Card Styles */
+/* Clean Card Styles */
 .card {
   background: var(--bg-glass);
   backdrop-filter: blur(30px);
@@ -390,7 +338,6 @@ body {
   border-radius: var(--radius-lg);
   padding: 35px;
   box-shadow: var(--shadow-dark);
-  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   overflow: hidden;
 }
@@ -403,34 +350,6 @@ body {
   right: 0;
   height: 3px;
   background: var(--primary-gradient);
-  transform: scaleX(0);
-  transition: transform 0.6s ease;
-}
-
-.card:hover::before {
-  transform: scaleX(1);
-}
-
-.card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow:
-    var(--shadow-primary),
-    0 30px 60px rgba(0, 0, 0, 0.2);
-  border-color: rgba(103, 132, 187, 0.3);
-}
-
-.card:nth-child(even):hover {
-  box-shadow:
-    var(--shadow-secondary),
-    0 30px 60px rgba(0, 0, 0, 0.2);
-  border-color: rgba(245, 87, 108, 0.3);
-}
-
-.card:nth-child(3n):hover {
-  box-shadow:
-    var(--shadow-accent),
-    0 30px 60px rgba(0, 0, 0, 0.2);
-  border-color: rgba(0, 242, 254, 0.3);
 }
 
 .card h2 {
@@ -463,29 +382,6 @@ body {
   color: white;
   box-shadow: var(--shadow-primary);
   position: relative;
-  transition: all 0.4s ease;
-}
-
-.user-avatar::before {
-  content: '';
-  position: absolute;
-  top: -5px;
-  left: -5px;
-  right: -5px;
-  bottom: -5px;
-  background: var(--accent-gradient);
-  border-radius: 50%;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.user-avatar:hover::before {
-  opacity: 1;
-}
-
-.user-avatar:hover {
-  transform: scale(1.1) rotate(5deg);
 }
 
 .user-text h3 {
@@ -519,12 +415,6 @@ body {
   background-clip: text;
   margin-bottom: 15px;
   text-shadow: 0 0 30px rgba(67, 233, 123, 0.3);
-  animation: xpPulse 3s ease-in-out infinite;
-}
-
-@keyframes xpPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
 }
 
 .xp-level {
@@ -550,12 +440,6 @@ body {
   background-clip: text;
   margin-bottom: 15px;
   text-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
-  animation: auditGlow 2s ease-in-out infinite alternate;
-}
-
-@keyframes auditGlow {
-  from { filter: brightness(1); }
-  to { filter: brightness(1.2); }
 }
 
 .audit-details {
@@ -590,26 +474,8 @@ body {
   font-weight: 600;
   color: var(--text-primary);
   backdrop-filter: blur(10px);
-  transition: all 0.4s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
-}
-
-.skill-tag:hover {
-  transform: translateY(-3px) scale(1.05);
-  background: var(--primary-gradient);
-  color: white;
-  box-shadow: var(--shadow-primary);
-}
-
-.skill-tag:nth-child(even):hover {
-  background: var(--secondary-gradient);
-  box-shadow: var(--shadow-secondary);
-}
-
-.skill-tag:nth-child(3n):hover {
-  background: var(--accent-gradient);
-  box-shadow: var(--shadow-accent);
 }
 
 /* Revolutionary Chart Container */
@@ -694,92 +560,7 @@ body {
   }
 }
 
-/* Revolutionary Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-50px) rotate(-5deg);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) rotate(0deg);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(50px) rotate(5deg);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) rotate(0deg);
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8) rotate(-10deg);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-  }
-}
-
-.card {
-  animation: fadeInUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  opacity: 0;
-  animation-fill-mode: forwards;
-}
-
-.card:nth-child(1) {
-  animation-delay: 0.1s;
-  animation-name: slideInLeft;
-}
-.card:nth-child(2) {
-  animation-delay: 0.2s;
-  animation-name: scaleIn;
-}
-.card:nth-child(3) {
-  animation-delay: 0.3s;
-  animation-name: slideInRight;
-}
-.card:nth-child(4) {
-  animation-delay: 0.4s;
-  animation-name: fadeInUp;
-}
-.card:nth-child(5) {
-  animation-delay: 0.5s;
-  animation-name: slideInLeft;
-}
-.card:nth-child(6) {
-  animation-delay: 0.6s;
-  animation-name: slideInRight;
-}
-
-/* Floating Animation for Background Elements */
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-10px) rotate(1deg); }
-  66% { transform: translateY(5px) rotate(-1deg); }
-}
-
-.card:hover {
-  animation: float 3s ease-in-out infinite;
-}
+/* Clean Static Design - No Animations */
 
 .login-container {
     width: 100%;
