@@ -186,6 +186,7 @@ body {
   min-height: 100vh;
   padding: 40px;
   position: relative;
+  width: 100%;
 }
 
 .login-container::before {
@@ -213,6 +214,7 @@ body {
   position: relative;
   z-index: 2;
   overflow: hidden;
+  margin: 0 auto;
 }
 
 .login-card::before {
@@ -539,9 +541,14 @@ body {
     padding: 80px 20px 20px;
   }
 
+  .login-container {
+    padding: 20px;
+  }
+
   .login-card {
     padding: 30px;
-    margin: 20px;
+    margin: 0 auto;
+    max-width: 90%;
   }
 
   .user-details {

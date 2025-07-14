@@ -20,7 +20,7 @@ class ProfileManager {
   requireAuth() {
     const token = localStorage.getItem('jwt_token');
     if (!token) {
-      window.location.href = '../pages/login.html';
+      window.location.href = 'login.html';
       return false;
     }
 
@@ -29,13 +29,13 @@ class ProfileManager {
       const now = Math.floor(Date.now() / 1000);
       if (payload.exp <= now) {
         localStorage.removeItem('jwt_token');
-        window.location.href = '../pages/login.html';
+        window.location.href = 'login.html';
         return false;
       }
       return true;
     } catch (error) {
       localStorage.removeItem('jwt_token');
-      window.location.href = '../pages/login.html';
+      window.location.href = 'login.html';
       return false;
     }
   }

@@ -8,7 +8,7 @@ class LoginManager {
   init() {
     // Check if already logged in
     if (this.isLoggedIn()) {
-      window.location.href = 'profile.html';
+      window.location.href = '../pages/profile.html';
       return;
     }
 
@@ -51,8 +51,8 @@ class LoginManager {
         localStorage.setItem('username', username);
         localStorage.setItem('login_time', new Date().toISOString());
         
-        // Redirect to profile
-        window.location.href = 'profile.html';
+        // Redirect directly to profile page
+        window.location.href = '../pages/profile.html';
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -163,7 +163,7 @@ class LoginManager {
   static requireAuth() {
     const token = LoginManager.getToken();
     if (!token) {
-      window.location.href = '../pages/login.html';
+      window.location.href = 'login.html';
       return false;
     }
 
@@ -172,13 +172,13 @@ class LoginManager {
       const now = Math.floor(Date.now() / 1000);
       if (payload.exp <= now) {
         localStorage.removeItem('jwt_token');
-        window.location.href = '../pages/login.html';
+        window.location.href = 'login.html';
         return false;
       }
       return true;
     } catch (error) {
       localStorage.removeItem('jwt_token');
-      window.location.href = '../pages/login.html';
+      window.location.href = 'login.html';
       return false;
     }
   }
