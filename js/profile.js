@@ -1046,28 +1046,27 @@ class ProfileManager {
             console.error('Error in showProfile:', error);
         }
     }
-}
 
-  showError(message) {
-    const errorDiv = document.getElementById('error-message');
-    if (errorDiv) {
-      errorDiv.textContent = message;
-      errorDiv.style.display = 'block';
+    showError(message) {
+        const errorDiv = document.getElementById('error-message');
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
     }
-  }
 
-  updateElement(id, content) {
-    const element = document.getElementById(id);
-    if (element) {
-      element.textContent = content;
+    updateElement(id, content) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = content;
+        }
     }
-  }
 
-  calculateAuditRatio(stats) {
-    const totalVotes = (stats.upVotes || 0) + (stats.downVotes || 0);
-    if (totalVotes === 0) return 0;
-    return (stats.upVotes || 0) / totalVotes;
-  }
+    calculateAuditRatio(stats) {
+        const totalVotes = (stats.upVotes || 0) + (stats.downVotes || 0);
+        if (totalVotes === 0) return 0;
+        return (stats.upVotes || 0) / totalVotes;
+    }
 }
 
 // Initialize profile manager when DOM is loaded
