@@ -8,7 +8,7 @@ class LoginManager {
   init() {
     // Check if already logged in
     if (this.isLoggedIn()) {
-      window.location.href = '../pages/profile.html';
+      window.location.href = 'profile.html';
       return;
     }
 
@@ -52,7 +52,7 @@ class LoginManager {
         localStorage.setItem('login_time', new Date().toISOString());
         
         // Redirect directly to profile page
-        window.location.href = '../pages/profile.html';
+        window.location.href = 'profile.html';
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -148,7 +148,7 @@ class LoginManager {
     localStorage.removeItem('jwt_token');
     localStorage.removeItem('username');
     localStorage.removeItem('login_time');
-    window.location.href = '../index.html';
+    window.location.href = 'login.html';
   }
 
   // Static methods for use in other modules

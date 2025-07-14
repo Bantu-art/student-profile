@@ -178,15 +178,19 @@ body {
   box-shadow: var(--shadow-primary);
 }
 
-/* Revolutionary Login Page */
+/* Perfectly Centered Login Page */
 .login-container {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 40px;
-  position: relative;
-  width: 100%;
+  min-width: 100vw;
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .login-container::before {

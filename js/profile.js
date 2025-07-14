@@ -53,7 +53,7 @@ class ProfileManager {
     localStorage.removeItem('jwt_token');
     localStorage.removeItem('username');
     localStorage.removeItem('login_time');
-    window.location.href = '../index.html';
+    window.location.href = 'login.html';
   }
 
   async loadProfileData() {
