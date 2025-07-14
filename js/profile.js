@@ -127,6 +127,7 @@ class ProfileManager {
           createdAt
           totalUp
           totalDown
+          level
         }
       }
     `;
@@ -243,7 +244,8 @@ class ProfileManager {
         username: user?.login || 'unknown',
         email: user?.email || '',
         joinDate: user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : '',
-        initials: this.getInitials(user?.firstName, user?.lastName)
+        initials: this.getInitials(user?.firstName, user?.lastName),
+        level: user?.level || 0
       },
       stats: {
         totalXP: totalXP,
@@ -328,8 +330,7 @@ class ProfileManager {
 
     // Update XP information
     this.updateElement('total-xp', `${stats.totalXP.toLocaleString()} XP`);
-    const level = this.calculateLevel(stats.totalXP);
-    this.updateElement('xp-level', `Level ${level}`);
+    this.updateElement('xp-level', `Level ${user.level}`);
 
     // Update audit information
     this.updateElement('audit-ratio', stats.auditRatio.toFixed(2));
@@ -1136,18 +1137,7 @@ class ProfileManager {
         return totalUp / totalDown;
     }
 
-    calculateLevel(xp) {
-        // Accurate Zone01 level calculation
-        // Fine-tuned to match the exact platform behavior
-        if (xp <= 0) return 0;
 
-        // Zone01 uses: level = floor(xp / 19000)
-        // Adjusted divisor to match platform levels more precisely
-        const level = Math.floor(xp / 19000);
-
-        // Cap at reasonable maximum level
-        return Math.min(level, 50);
-    }
 }
 
 // Initialize profile manager when DOM is loaded
