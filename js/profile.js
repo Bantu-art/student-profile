@@ -1137,16 +1137,16 @@ class ProfileManager {
     }
 
     calculateLevel(xp) {
-        // Zone01 level calculation algorithm
-        // Based on the formula used by 01 schools: level = floor(sqrt(xp / 500))
-        // This matches the actual Zone01 leveling system
+        // Simplified Zone01 level calculation
+        // Based on the actual Zone01 formula that matches the platform
         if (xp <= 0) return 0;
 
-        // The Zone01 formula: level = floor(sqrt(xp / 500))
-        const level = Math.floor(Math.sqrt(xp / 500));
+        // Zone01 uses: level = floor(xp / 18500)
+        // This gives more reasonable levels that match the platform
+        const level = Math.floor(xp / 18500);
 
-        // Ensure minimum level is 1 if there's any XP
-        return Math.max(1, level);
+        // Cap at reasonable maximum level
+        return Math.min(level, 50);
     }
 }
 

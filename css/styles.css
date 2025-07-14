@@ -268,18 +268,20 @@ body {
 .form-group input {
   width: 100%;
   padding: 18px 24px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: var(--radius-md);
-  color: var(--text-primary);
+  color: #ffffff !important;
   font-size: 16px;
   backdrop-filter: blur(10px);
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: rgba(0, 242, 254, 0.6);
-  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(0, 242, 254, 0.8);
+  background: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
   box-shadow:
     0 0 0 4px rgba(0, 242, 254, 0.1),
     0 8px 25px rgba(0, 242, 254, 0.15);
