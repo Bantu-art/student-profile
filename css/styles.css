@@ -271,10 +271,10 @@ body {
   background: rgba(0, 0, 0, 0.6);
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: var(--radius-md);
-  color: #ffffff !important;
+  color: #241f1f !important;
   font-size: 16px;
   backdrop-filter: blur(10px);
-  -webkit-text-fill-color: #ffffff !important;
+  -webkit-text-fill-color: #2e2020 !important;
 }
 
 .form-group input:focus {
