@@ -5,7 +5,6 @@
   "main": "login.html",
   "scripts": {
     "dev": "python3 -m http.server 8000",
-    "build": "echo 'Static site - no build needed'",
     "start": "echo 'Static site deployed'",
     "serve": "python3 -m http.server 8000",
     "test-auth": "./tests/test-auth.sh",
